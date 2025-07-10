@@ -1,4 +1,3 @@
-
 import json
 import os
 from telegram import Update
@@ -10,12 +9,12 @@ FAKE_CODES = {f"fake{i}" for i in range(1, 11)}
 def load_db():
     if not os.path.exists(DB_PATH):
         return {}
-    with open(DB_PATH, "r") as f:
+    with open(DB_PATH, "r", encoding="utf-8") as f:
         return json.load(f)
 
 def save_db(db):
-    with open(DB_PATH, "w") as f:
-        json.dump(db, f)
+    with open(DB_PATH, "w", encoding="utf-8") as f:
+        json.dump(db, f, ensure_ascii=False, indent=2)
 
 def format_progress(user_pieces):
     found = sorted(user_pieces)
@@ -30,6 +29,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = str(update.effective_user.id)
     text = update.message.text
     args = context.args if context.args else text.split()[1:]
+    
     if not args:
         await update.message.reply_text("Привіт! Скануй QR-коди, щоб зібрати частини картини!")
         return
